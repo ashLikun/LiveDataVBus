@@ -1,7 +1,7 @@
 package com.ashlikun.livedatabus;
 
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.annotation.Nullable;
 
 /**
  * 作者　　: 李坤

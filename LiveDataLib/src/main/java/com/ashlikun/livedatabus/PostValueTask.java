@@ -1,7 +1,7 @@
 package com.ashlikun.livedatabus;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 
 /**
  * 作者　　: 李坤
