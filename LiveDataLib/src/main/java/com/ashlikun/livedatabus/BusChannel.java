@@ -1,10 +1,14 @@
 package com.ashlikun.livedatabus;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.Handler;
 import android.os.Looper;
+
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 
 /**
  * 作者　　: 李坤
@@ -17,6 +21,20 @@ import androidx.annotation.NonNull;
 public class BusChannel {
     BusLiveData busLiveData = new BusLiveData();
 
+    /**
+     * 方法功能：从context中获取activity，如果context不是activity那么久返回null
+     */
+    private Activity getActivity(Context context) {
+        if (context == null) {
+            return null;
+        }
+        if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return getActivity(((ContextWrapper) context).getBaseContext());
+        }
+        return null;
+    }
 
     /**
      * 主线程handle
@@ -47,7 +65,7 @@ public class BusChannel {
 
     /**
      * 注册订阅
-     * 这种注册只会在activity生命周期内执行(获取焦点)，如果发送的时候没有获取焦点，那么会在获取焦点的时候出发
+     * 这种注册只会在activity生命周期内执行(获取焦点)，如果发送的时候没有获取焦点，那么会在获取焦点的时候触发
      * <p>
      * 不需要手动取消订阅
      */
@@ -62,11 +80,46 @@ public class BusChannel {
 
     /**
      * 注册订阅
+     * 这种注册只会在activity生命周期内执行(获取焦点)，如果发送的时候没有获取焦点，那么会在获取焦点的时候触发
+     * <p>
+     * 不需要手动取消订阅
+     */
+    public void registerLifecycle2(@NonNull Object context, @NonNull Observer observer) {
+        if (context instanceof LifecycleOwner) {
+            registerLifecycle((LifecycleOwner) context, observer);
+        } else if (context instanceof Context) {
+            Activity activity = getActivity((Context)context);
+            if (activity != null && activity instanceof LifecycleOwner) {
+                registerLifecycle((LifecycleOwner) activity, observer);
+            }
+        }
+    }
+
+    /**
+     * 注册订阅
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
     public void registerSticky(@NonNull LifecycleOwner owner, @NonNull Observer observer) {
         busLiveData.observe(owner, observer);
+    }
+
+    /**
+     * 注册订阅
+     * Sticky:这样订阅者可以接收到订阅之前发送的消息
+     * 不需要手动取消订阅
+     *
+     * @param context
+     */
+    public void registerSticky2(@NonNull Object context, @NonNull Observer observer) {
+        if (context instanceof LifecycleOwner) {
+            registerSticky((LifecycleOwner) context, observer);
+        } else if (context instanceof Context) {
+            Activity activity = getActivity((Context) context);
+            if (activity != null && activity instanceof LifecycleOwner) {
+                registerSticky((LifecycleOwner) activity, observer);
+            }
+        }
     }
 
     /**

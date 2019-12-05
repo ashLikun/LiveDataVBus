@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.ashlikun.livedatabus.EventBus;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+
+import com.ashlikun.livedatabus.EventBus;
 
 /**
  * 作者　　: 李坤

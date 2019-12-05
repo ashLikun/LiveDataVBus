@@ -1,7 +1,8 @@
 package com.ashlikun.livedatabus;
 
-import androidx.lifecycle.Observer;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 /**
  * 作者　　: 李坤
@@ -32,7 +33,7 @@ class ObserverWrapper<T> implements Observer<T> {
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         if (stackTrace != null && stackTrace.length > 0) {
             for (StackTraceElement element : stackTrace) {
-                if ("android.arch.lifecycle.LiveData".equals(element.getClassName()) &&
+                if (LiveData.class.getName().equals(element.getClassName()) &&
                         "observeForever".equals(element.getMethodName())) {
                     return true;
                 }
