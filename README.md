@@ -21,17 +21,12 @@ dependencies {
 ### 1.用法
 ```java
          //注册
-         EventBus.get("key1")
-                        .registerForever(new Observer<String>() {
-                            @Override
-                            public void onChanged(@Nullable String s) {
-                                Log.e("MainActivity", "接受到数据" + s);
-                            }
-                        });
+         bus("key1") {
+                    Log.e("MainActivity", "3接受到数据bus  $it")
+                }
 
          //发送事件，不用担心线程问题
-         EventBus.get("key2")
-                  .post("33333");
+         "key1".busPost("2222222")
 
 
 
