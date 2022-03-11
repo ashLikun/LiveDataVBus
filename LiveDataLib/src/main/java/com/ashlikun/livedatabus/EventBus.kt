@@ -24,33 +24,40 @@ import java.util.HashMap
  *
  * 不需要手动取消订阅
  */
-inline fun LifecycleOwner.bus(key: String, observer: Observer<Any?>) =
+inline fun LifecycleOwner.bus(key: String, observer: Observer<out Any?>) =
     EventBus[key].registerLifecycle(this, observer)
 
-inline fun Context.busContext(key: String, observer: Observer<Any?>) =
+inline fun Context.busContext(key: String, observer: Observer<out Any?>) =
     EventBus[key].registerLifecycle2(this, observer)
+
+inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+    EventBus[this].registerLifecycle(lifecycleOwner, observer)
 
 /**
  * 注册订阅
  * Sticky:这样订阅者可以接收到订阅之前发送的消息
  * 不需要手动取消订阅
  */
-inline fun LifecycleOwner.busSticky(key: String, observer: Observer<Any?>) =
+inline fun LifecycleOwner.busSticky(key: String, observer: Observer<out Any?>) =
     EventBus[key].registerSticky(this, observer)
 
-inline fun Context.busContextSticky(key: String, observer: Observer<Any?>) =
+inline fun Context.busContextSticky(key: String, observer: Observer<out Any?>) =
     EventBus[key].registerSticky2(this, observer)
+
+inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+    EventBus[this].registerSticky(lifecycleOwner, observer)
 
 /**
  * 永久注册
  *
  * 需要手动取消订阅
  */
-inline fun Context.busForever(key: String, observer: Observer<Any?>) =
-    EventBus[key].registerForever(observer)
 
-inline fun Context.busStickyForever(key: String, observer: Observer<Any?>) =
-    EventBus[key].registerStickyForever(observer)
+inline fun String.busForever(observer: Observer<Any?>) =
+    EventBus[this].registerForever(observer)
+
+inline fun String.busStickyForever(observer: Observer<Any?>) =
+    EventBus[this].registerStickyForever(observer)
 
 /**
  * 反注册
@@ -71,7 +78,7 @@ class EventBus private constructor() {
     /**
      * 存放消息通道的map
      */
-    private val bus: MutableMap<String, BusChannel> = mutableMapOf()
+    private val bus: MutableMap<String, BusChannel<Any?>> = mutableMapOf()
 
     /**
      * 获得这个key对应的消息通道
@@ -80,7 +87,7 @@ class EventBus private constructor() {
      * @return
      */
     @Synchronized
-    private fun with(key: String): BusChannel {
+    private fun with(key: String): BusChannel<Any?> {
         if (!bus.containsKey(key)) {
             bus[key] = BusChannel()
         }

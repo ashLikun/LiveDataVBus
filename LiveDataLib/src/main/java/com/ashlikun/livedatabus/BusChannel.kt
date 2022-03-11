@@ -19,8 +19,8 @@ import androidx.lifecycle.Observer
  */
 
 
-class BusChannel {
-    private var busLiveData = MutableLiveData<Any?>()
+class BusChannel<T> {
+    private var busLiveData = MutableLiveData<T>()
 
     /**
      * 方法功能：从context中获取activity，如果context不是activity那么久返回null
@@ -37,7 +37,7 @@ class BusChannel {
      * 这里判断线程，如果不是主线程会切换到主线程
      */
     @JvmOverloads
-    fun post(value: Any? = null) {
+    fun post(value: T? = null) {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             busLiveData.postValue(value)
         } else {
@@ -51,8 +51,8 @@ class BusChannel {
      *
      * 不需要手动取消订阅
      */
-    fun registerLifecycle(owner: LifecycleOwner, observer: Observer<Any?>) {
-        busLiveData.observe(owner, observer)
+    fun registerLifecycle(owner: LifecycleOwner, observer: Observer<out T?>) {
+        busLiveData.observe(owner, observer as Observer<Any?>)
         try {
             BusUtils.hook(busLiveData, observer)
         } catch (e: Exception) {
@@ -66,7 +66,7 @@ class BusChannel {
      *
      * 不需要手动取消订阅
      */
-    fun registerLifecycle2(context: Any, observer: Observer<Any?>) {
+    fun registerLifecycle2(context: Any, observer: Observer<out T?>) {
         if (context is LifecycleOwner) {
             registerLifecycle(context, observer)
         } else if (context is Context) {
@@ -82,8 +82,8 @@ class BusChannel {
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
-    fun registerSticky(owner: LifecycleOwner, observer: Observer<Any?>) {
-        busLiveData.observe(owner, observer)
+    fun registerSticky(owner: LifecycleOwner, observer: Observer<out T?>) {
+        busLiveData.observe(owner, observer as Observer<Any?>)
     }
 
     /**
@@ -91,7 +91,7 @@ class BusChannel {
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
-    fun registerSticky2(context: Any, observer: Observer<Any?>) {
+    fun registerSticky2(context: Any, observer: Observer<out T?>) {
         if (context is LifecycleOwner) {
             registerSticky(context, observer)
         } else if (context is Context) {
@@ -107,8 +107,8 @@ class BusChannel {
      *
      * 需要手动取消订阅
      */
-    fun registerForever(observer: Observer<Any?>) {
-        busLiveData.observeForever(ObserverWrapper<Any?>(observer))
+    fun registerForever(observer: Observer<out T?>) {
+        busLiveData.observeForever(ObserverWrapper(observer as Observer<Any?>))
     }
 
     /**
@@ -117,15 +117,15 @@ class BusChannel {
      *
      * @param observer
      */
-    fun registerStickyForever(observer: Observer<Any?>) {
-        busLiveData.observeForever(observer)
+    fun registerStickyForever(observer: Observer<out T?>) {
+        busLiveData.observeForever(observer as Observer<Any?>)
     }
 
     /**
      * 取消订阅
      * Forever模式的都要主动取消
      */
-    fun unRegister(observer: Observer<Any?>) {
-        busLiveData.removeObserver(observer)
+    fun unRegister(observer: Observer<out T?>) {
+        busLiveData.removeObserver(observer as Observer<Any?>)
     }
 }

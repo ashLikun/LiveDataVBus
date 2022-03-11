@@ -12,9 +12,9 @@ import androidx.lifecycle.Observer
  *
  * 功能介绍：
  */
-internal class ObserverWrapper<T>(observer: Observer<T?>?) : Observer<T?> {
-    private val observer: Observer<T?>?
-    override fun onChanged(t: T?) {
+internal class ObserverWrapper<T>(observer: Observer<T>) : Observer<T> {
+    private val observer: Observer<T>?
+    override fun onChanged(t: T) {
         if (observer != null) {
             if (isCallOnObserve) {
                 return

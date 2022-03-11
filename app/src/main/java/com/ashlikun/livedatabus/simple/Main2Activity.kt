@@ -6,6 +6,7 @@ import com.ashlikun.livedatabus.EventBus
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.ashlikun.livedatabus.busPost
 import com.ashlikun.livedatabus.busSticky
 
@@ -22,12 +23,16 @@ class Main2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        busSticky("key2"){
+        busSticky("key2", Observer<String?> {
+            it.length
             Log.e("Main2Activity", "接受到Sticky数据aa$it")
+        })
+        "key2".busSticky(this) {
+            Log.e("Main2Activity", "接受到Sticky2数据aa$it")
         }
     }
 
     fun onClick(view: View?) {
-        "key1".busPost("2222222")
+        "key1".busPost()
     }
 }

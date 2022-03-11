@@ -17,7 +17,7 @@ internal object BusUtils {
      * 解决可以接收到订阅之前发送的消息
      */
     @Throws(Exception::class)
-    fun hook(liveData: LiveData<Any?>, observer: Observer<*>) {
+    fun hook(liveData: LiveData<*>, observer: Observer<*>) {
         //get wrapper's version
         val classLiveData = LiveData::class.java
         val fieldObservers = classLiveData.getDeclaredField("mObservers")
