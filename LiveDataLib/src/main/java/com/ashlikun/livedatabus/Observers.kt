@@ -14,10 +14,10 @@ import androidx.lifecycle.Observer
 /**
  * 加入计数,达到次数就回调
  */
-fun <T> observerCount(count: Int = 0, observer: Observer<T>) {
+fun <T> observerCount(count: Int = 0, observer: Observer<T>): Observer<T> {
     var count = count
     var current = 0
-    Observer<T> {
+    return Observer<T> {
         current++
         if (current >= count) {
             observer.onChanged(it)
