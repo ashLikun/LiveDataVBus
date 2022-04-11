@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Looper
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 
@@ -18,10 +19,18 @@ import androidx.lifecycle.Observer
  * 泛型代表观察的对象
  * 封装MutableLiveData
  */
+open class XLiveData<T> : MutableLiveData<T?>() {
 
+    var valueX
+        get() = super.getValue()
+        set(value) {
+            post(value)
+        }
 
-public class XLiveData<T> {
-    private var busLiveData = MutableLiveData<T>()
+    override fun setValue(value: T?) {
+        post(value)
+    }
+
 
     /**
      * 方法功能：从context中获取activity，如果context不是activity那么久返回null
@@ -40,9 +49,9 @@ public class XLiveData<T> {
     @JvmOverloads
     fun post(value: T? = null) {
         if (Looper.getMainLooper() != Looper.myLooper()) {
-            busLiveData.postValue(value)
+            super.postValue(value)
         } else {
-            busLiveData.value = value
+            super.setValue(value)
         }
     }
 
@@ -53,10 +62,10 @@ public class XLiveData<T> {
      * X:不会接收之前的消息
      * 不需要手动取消订阅
      */
-    fun observeX(owner: LifecycleOwner, observer: Observer<out T?>) {
-        busLiveData.observe(owner, observer as Observer<Any?>)
+    fun observeX(owner: LifecycleOwner, observer: Observer<in T?>) {
+        observe(owner, observer)
         try {
-            BusUtils.hook(busLiveData, observer)
+            BusUtils.hook(this, observer)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -68,7 +77,7 @@ public class XLiveData<T> {
      * X:不会接收之前的消息
      * 不需要手动取消订阅
      */
-    fun observeX2(context: Any, observer: Observer<out T?>) {
+    fun observeX2(context: Any, observer: Observer<in T?>) {
         if (context is LifecycleOwner) {
             observeX(context, observer)
         } else if (context is Context) {
@@ -84,8 +93,8 @@ public class XLiveData<T> {
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
-    fun observe(owner: LifecycleOwner, observer: Observer<out T?>) {
-        busLiveData.observe(owner, observer as Observer<Any?>)
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T?>) {
+        super.observe(owner, observer as Observer<Any?>)
     }
 
     /**
@@ -93,7 +102,7 @@ public class XLiveData<T> {
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
-    fun observe2(context: Any, observer: Observer<out T?>) {
+    fun observe2(context: Any, observer: Observer<in T?>) {
         if (context is LifecycleOwner) {
             observe(context, observer)
         } else if (context is Context) {
@@ -109,8 +118,8 @@ public class XLiveData<T> {
      *
      * 需要手动取消订阅
      */
-    fun observeForeverX(observer: Observer<out T?>) {
-        busLiveData.observeForever(ObserverWrapper(observer as Observer<Any?>))
+    fun observeForeverX(observer: Observer<in T?>) {
+        super.observeForever(ObserverWrapper(observer))
     }
 
     /**
@@ -119,15 +128,15 @@ public class XLiveData<T> {
      *
      * @param observer
      */
-    fun observeForever(observer: Observer<out T?>) {
-        busLiveData.observeForever(observer as Observer<Any?>)
+    override fun observeForever(observer: Observer<in T?>) {
+        super.observeForever(observer)
     }
 
     /**
      * 取消订阅
      * Forever模式的都要主动取消
      */
-    fun unObserve(observer: Observer<out T?>) {
-        busLiveData.removeObserver(observer as Observer<Any?>)
+    fun unObserve(observer: Observer<in T?>) {
+        super.removeObserver(observer)
     }
 }

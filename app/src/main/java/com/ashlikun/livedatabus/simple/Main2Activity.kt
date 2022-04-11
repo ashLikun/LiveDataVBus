@@ -23,8 +23,7 @@ class Main2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
 
-        busSticky("key2", Observer<String?> {
-            it.length
+        busSticky("key2", {
             Log.e("Main2Activity", "接受到Sticky数据aa$it")
         })
         "key2".busSticky(this) {

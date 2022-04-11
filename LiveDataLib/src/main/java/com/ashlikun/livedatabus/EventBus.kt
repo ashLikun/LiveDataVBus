@@ -20,13 +20,13 @@ import kotlin.jvm.Synchronized
  *
  * 不需要手动取消订阅
  */
-inline fun LifecycleOwner.bus(key: String, observer: Observer<out Any?>) =
+inline fun LifecycleOwner.bus(key: String, observer: Observer<in Any?>) =
     EventBus[key].observeX(this, observer)
 
-inline fun Context.busContext(key: String, observer: Observer<out Any?>) =
+inline fun Context.busContext(key: String, observer: Observer<in Any?>) =
     EventBus[key].observeX2(this, observer)
 
-inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<in Any?>) =
     EventBus[this].observeX(lifecycleOwner, observer)
 
 /**
@@ -34,13 +34,13 @@ inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any
  * Sticky:这样订阅者可以接收到订阅之前发送的消息
  * 不需要手动取消订阅
  */
-inline fun LifecycleOwner.busSticky(key: String, observer: Observer<out Any?>) =
+inline fun LifecycleOwner.busSticky(key: String, observer: Observer<in Any?>) =
     EventBus[key].observe(this, observer)
 
-inline fun Context.busContextSticky(key: String, observer: Observer<out Any?>) =
+inline fun Context.busContextSticky(key: String, observer: Observer<in Any?>) =
     EventBus[key].observe2(this, observer)
 
-inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<in Any?>) =
     EventBus[this].observe(lifecycleOwner, observer)
 
 /**
@@ -87,6 +87,7 @@ class EventBus private constructor() {
         if (!bus.containsKey(key)) {
             bus[key] = XLiveData()
         }
+        XLiveData<Any>().setValue("")
         return bus[key]!!
     }
 
