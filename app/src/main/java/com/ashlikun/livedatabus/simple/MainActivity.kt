@@ -1,14 +1,12 @@
 package com.ashlikun.livedatabus.simple
 
 import android.os.Bundle
-import com.ashlikun.livedatabus.simple.R
 import com.ashlikun.livedatabus.EventBus
 import android.util.Log
 import android.view.View
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.ashlikun.livedatabus.bus
-import com.ashlikun.livedatabus.simple.Main2Activity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,10 +17,10 @@ class MainActivity : AppCompatActivity() {
         EventBus["key2"]
             .post("44444")
         EventBus["key2"]
-            .registerForever { s -> Log.e("MainActivity", "接受到数据$s") }
+            .observeForeverX { s -> Log.e("MainActivity", "接受到数据$s") }
 
         EventBus["key1"]
-            .registerForever { s -> Log.e("MainActivity", "1接受到数据$s") }
+            .observeForeverX { s -> Log.e("MainActivity", "1接受到数据$s") }
 
         bus("key1") {
             Log.e("MainActivity", "3接受到数据bus  $it")

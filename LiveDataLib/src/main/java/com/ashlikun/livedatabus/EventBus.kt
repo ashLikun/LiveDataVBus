@@ -3,11 +3,7 @@ package com.ashlikun.livedatabus
 import android.content.Context
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
-import com.ashlikun.livedatabus.BusChannel
 import kotlin.jvm.Synchronized
-import kotlin.jvm.Volatile
-import com.ashlikun.livedatabus.EventBus
-import java.util.HashMap
 
 /**
  * @author　　: 李坤
@@ -25,13 +21,13 @@ import java.util.HashMap
  * 不需要手动取消订阅
  */
 inline fun LifecycleOwner.bus(key: String, observer: Observer<out Any?>) =
-    EventBus[key].registerLifecycle(this, observer)
+    EventBus[key].observeX(this, observer)
 
 inline fun Context.busContext(key: String, observer: Observer<out Any?>) =
-    EventBus[key].registerLifecycle2(this, observer)
+    EventBus[key].observeX2(this, observer)
 
 inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
-    EventBus[this].registerLifecycle(lifecycleOwner, observer)
+    EventBus[this].observeX(lifecycleOwner, observer)
 
 /**
  * 注册订阅
@@ -39,13 +35,13 @@ inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any
  * 不需要手动取消订阅
  */
 inline fun LifecycleOwner.busSticky(key: String, observer: Observer<out Any?>) =
-    EventBus[key].registerSticky(this, observer)
+    EventBus[key].observe(this, observer)
 
 inline fun Context.busContextSticky(key: String, observer: Observer<out Any?>) =
-    EventBus[key].registerSticky2(this, observer)
+    EventBus[key].observe2(this, observer)
 
 inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
-    EventBus[this].registerSticky(lifecycleOwner, observer)
+    EventBus[this].observe(lifecycleOwner, observer)
 
 /**
  * 永久注册
@@ -54,19 +50,19 @@ inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<o
  */
 
 inline fun String.busForever(observer: Observer<Any?>) =
-    EventBus[this].registerForever(observer)
+    EventBus[this].observeForeverX(observer)
 
 inline fun String.busStickyForever(observer: Observer<Any?>) =
-    EventBus[this].registerStickyForever(observer)
+    EventBus[this].observeForever(observer)
 
 /**
  * 反注册
  */
 inline fun Observer<Any?>.unBus(key: String) =
-    EventBus[key].unRegister(this)
+    EventBus[key].unObserve(this)
 
 inline fun String.unBus(observer: Observer<Any?>) =
-    EventBus[this].unRegister(observer)
+    EventBus[this].unObserve(observer)
 
 /**
  * 发送事件扩展方法
@@ -78,7 +74,7 @@ class EventBus private constructor() {
     /**
      * 存放消息通道的map
      */
-    private val bus: MutableMap<String, BusChannel<Any?>> = mutableMapOf()
+    private val bus: MutableMap<String, XLiveData<Any?>> = mutableMapOf()
 
     /**
      * 获得这个key对应的消息通道
@@ -87,9 +83,9 @@ class EventBus private constructor() {
      * @return
      */
     @Synchronized
-    private fun with(key: String): BusChannel<Any?> {
+    private fun with(key: String): XLiveData<Any?> {
         if (!bus.containsKey(key)) {
-            bus[key] = BusChannel()
+            bus[key] = XLiveData()
         }
         return bus[key]!!
     }

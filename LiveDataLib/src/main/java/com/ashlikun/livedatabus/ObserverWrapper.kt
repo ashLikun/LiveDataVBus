@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
  *
  * 功能介绍：
  */
-internal class ObserverWrapper<T>(observer: Observer<T>) : Observer<T> {
+open class ObserverWrapper<T>(observer: Observer<T>) : Observer<T> {
     private val observer: Observer<T>?
     override fun onChanged(t: T) {
         if (observer != null) {
@@ -26,7 +26,7 @@ internal class ObserverWrapper<T>(observer: Observer<T>) : Observer<T> {
     private val isCallOnObserve: Boolean
         private get() {
             val stackTrace = Thread.currentThread().stackTrace
-            if (stackTrace != null && stackTrace.size > 0) {
+            if (stackTrace != null && stackTrace.isNotEmpty()) {
                 for (element in stackTrace) {
                     if (LiveData::class.java.name == element.className && "observeForever" == element.methodName) {
                         return true
