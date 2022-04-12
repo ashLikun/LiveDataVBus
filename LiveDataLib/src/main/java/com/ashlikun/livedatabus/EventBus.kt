@@ -87,7 +87,6 @@ class EventBus private constructor() {
         if (!bus.containsKey(key)) {
             bus[key] = XLiveData()
         }
-        XLiveData<Any>().setValue("")
         return bus[key]!!
     }
 
