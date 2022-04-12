@@ -20,6 +20,7 @@ fun <T> observerCount(count: Int = 0, observer: Observer<T>): Observer<T> {
     return Observer<T> {
         current++
         if (current >= count) {
+            current = 0
             observer.onChanged(it)
         }
     }
