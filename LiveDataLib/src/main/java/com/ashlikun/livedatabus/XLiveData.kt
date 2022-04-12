@@ -19,7 +19,7 @@ import androidx.lifecycle.Observer
  * 泛型代表观察的对象
  * 封装MutableLiveData
  */
-open class XLiveData<T> : MutableLiveData<T?>() {
+open class XLiveData<T> : MutableLiveData<T>() {
 
     var valueX
         get() = super.getValue()
@@ -27,7 +27,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
             post(value)
         }
 
-    override fun setValue(value: T?) {
+    override fun setValue(value: T) {
         post(value)
     }
 
@@ -62,7 +62,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      * X:不会接收之前的消息
      * 不需要手动取消订阅
      */
-    fun observeX(owner: LifecycleOwner, observer: Observer<in T?>) {
+    fun observeX(owner: LifecycleOwner, observer: Observer<in T>) {
         observe(owner, observer)
         try {
             BusUtils.hook(this, observer)
@@ -77,7 +77,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      * X:不会接收之前的消息
      * 不需要手动取消订阅
      */
-    fun observeX2(context: Any, observer: Observer<in T?>) {
+    fun observeX2(context: Any, observer: Observer<in T>) {
         if (context is LifecycleOwner) {
             observeX(context, observer)
         } else if (context is Context) {
@@ -93,8 +93,8 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
-    override fun observe(owner: LifecycleOwner, observer: Observer<in T?>) {
-        super.observe(owner, observer as Observer<Any?>)
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+        super.observe(owner, observer)
     }
 
     /**
@@ -102,7 +102,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      * Sticky:这样订阅者可以接收到订阅之前发送的消息
      * 不需要手动取消订阅
      */
-    fun observe2(context: Any, observer: Observer<in T?>) {
+    fun observe2(context: Any, observer: Observer<in T>) {
         if (context is LifecycleOwner) {
             observe(context, observer)
         } else if (context is Context) {
@@ -118,7 +118,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      *
      * 需要手动取消订阅
      */
-    fun observeForeverX(observer: Observer<in T?>) {
+    fun observeForeverX(observer: Observer<in T>) {
         super.observeForever(ObserverWrapper(observer))
     }
 
@@ -128,7 +128,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      *
      * @param observer
      */
-    override fun observeForever(observer: Observer<in T?>) {
+    override fun observeForever(observer: Observer<in T>) {
         super.observeForever(observer)
     }
 
@@ -136,7 +136,7 @@ open class XLiveData<T> : MutableLiveData<T?>() {
      * 取消订阅
      * Forever模式的都要主动取消
      */
-    fun unObserve(observer: Observer<in T?>) {
+    fun unObserve(observer: Observer<in T>) {
         super.removeObserver(observer)
     }
 }
