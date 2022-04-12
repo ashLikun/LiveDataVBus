@@ -27,11 +27,6 @@ open class XLiveData<T> : MutableLiveData<T>() {
             post(value)
         }
 
-    override fun setValue(value: T) {
-        post(value)
-    }
-
-
     /**
      * 方法功能：从context中获取activity，如果context不是activity那么久返回null
      */
