@@ -29,6 +29,7 @@ class Main2Activity : AppCompatActivity() {
         "key2".busSticky(this) {
             Log.e("Main2Activity", "接受到Sticky2数据aa$it")
         }
+        "key444".busPost("dasdasd")
     }
 
     fun onClick(view: View?) {

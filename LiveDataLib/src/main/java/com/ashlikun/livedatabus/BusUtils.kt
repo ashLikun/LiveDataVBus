@@ -42,31 +42,52 @@ internal object BusUtils {
         fieldLastVersion[objectWrapper] = objectVersion
     }
 
-    /**
-     * 只有在OnResme才接收消息
-     */
-    @Throws(Exception::class)
-    fun hookCurrentState(lifecycleOwner: LifecycleOwner, observer: Observer<*>): LifecycleOwner {
 
-        return LifecycleOwner {
-            object : Lifecycle() {
-                override fun addObserver(observer: LifecycleObserver) {
-                    lifecycleOwner.lifecycle.addObserver(observer)
-                }
+}
 
-                override fun removeObserver(observer: LifecycleObserver) {
-                    lifecycleOwner.lifecycle.removeObserver(observer)
-                }
+/**
+ * 只有在OnResumed才接收消息
+ */
+fun LifecycleOwner.liveDataResumed(): LifecycleOwner {
+    //返回一个代理
+    return LifecycleOwner {
+        object : Lifecycle() {
+            override fun addObserver(observer: LifecycleObserver) {
+                lifecycle.addObserver(observer)
+            }
 
-                override fun getCurrentState(): State {
-                    if (lifecycleOwner.lifecycle.currentState.isAtLeast(State.STARTED)) {
-                        return State.RESUMED
-                    } else {
-                        return State.RESUMED
+            override fun removeObserver(observer: LifecycleObserver) {
+                lifecycle.removeObserver(observer)
+            }
+
+            override fun getCurrentState(): State {
+                //如果是start就返回在create，这样LiveData内部就不能判断是start
+                return when {
+                    lifecycle.currentState == State.STARTED -> {
+                        State.CREATED
+                    }
+                    else -> {
+                        lifecycle.currentState
                     }
                 }
-
             }
+
+        }
+    }
+}
+
+
+/**
+ * 加入计数,达到次数就回调
+ */
+fun <T> Observer<T>.count(count: Int = 0): Observer<T> {
+    var count = count
+    var current = 0
+    return Observer<T> {
+        current++
+        if (current >= count) {
+            current = 0
+            this.onChanged(it)
         }
     }
 }
