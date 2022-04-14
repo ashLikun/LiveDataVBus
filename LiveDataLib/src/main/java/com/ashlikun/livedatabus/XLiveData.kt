@@ -24,7 +24,9 @@ open class XLiveData<T> : MutableLiveData<T>() {
     var valueX
         get() = super.getValue()
         set(value) {
-            post(value)
+            if (value != null) {
+                post(value)
+            }
         }
 
     /**
@@ -42,7 +44,7 @@ open class XLiveData<T> : MutableLiveData<T>() {
      * 这里判断线程，如果不是主线程会切换到主线程
      */
     @JvmOverloads
-    fun post(value: T? = null) {
+    fun post(value: T) {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             super.postValue(value)
         } else {

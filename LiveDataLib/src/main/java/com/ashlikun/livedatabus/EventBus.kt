@@ -67,7 +67,7 @@ inline fun String.unBus(observer: Observer<out Any>) =
 /**
  * 发送事件扩展方法
  */
-inline fun String.busPost(value: Any? = null) =
+inline fun String.busPost(value: Any) =
     EventBus[this].post(value)
 
 class EventBus private constructor() {
