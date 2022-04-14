@@ -27,6 +27,9 @@ open class XLiveData<T> : MutableLiveData<T>() {
             post(value)
         }
 
+    //是否自定义  LifecycleOwner 在onResume 的时候才回调数据
+    var isResume = false
+
     /**
      * 方法功能：从context中获取activity，如果context不是activity那么久返回null
      */

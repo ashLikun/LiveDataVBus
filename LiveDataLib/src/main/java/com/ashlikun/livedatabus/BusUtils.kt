@@ -1,9 +1,6 @@
 package com.ashlikun.livedatabus
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import java.lang.Exception
-import java.lang.NullPointerException
+import androidx.lifecycle.*
 
 /**
  * 作者　　: 李坤
@@ -43,5 +40,33 @@ internal object BusUtils {
         val objectVersion = fieldVersion[liveData]
         //set wrapper's version
         fieldLastVersion[objectWrapper] = objectVersion
+    }
+
+    /**
+     * 只有在OnResme才接收消息
+     */
+    @Throws(Exception::class)
+    fun hookCurrentState(lifecycleOwner: LifecycleOwner, observer: Observer<*>): LifecycleOwner {
+
+        return LifecycleOwner {
+            object : Lifecycle() {
+                override fun addObserver(observer: LifecycleObserver) {
+                    lifecycleOwner.lifecycle.addObserver(observer)
+                }
+
+                override fun removeObserver(observer: LifecycleObserver) {
+                    lifecycleOwner.lifecycle.removeObserver(observer)
+                }
+
+                override fun getCurrentState(): State {
+                    if (lifecycleOwner.lifecycle.currentState.isAtLeast(State.STARTED)) {
+                        return State.RESUMED
+                    } else {
+                        return State.RESUMED
+                    }
+                }
+
+            }
+        }
     }
 }
