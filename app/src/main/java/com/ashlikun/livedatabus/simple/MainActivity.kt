@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
             Log.e("MainActivity", "3接受到数据bus  $it")
         }
 
-        "key444".bus(this.liveDataResumed(), Observer<String> {
+        "key444".bus(this.liveDataResumed(), Observer<Any> {
             Log.e("MainActivity", "key444接受到数据bus  $it  ${lifecycle.currentState}")
-        })
+        }.count(3))
     }
 
     fun onClick(view: View?) {

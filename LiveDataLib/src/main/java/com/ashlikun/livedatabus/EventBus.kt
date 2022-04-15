@@ -35,13 +35,13 @@ inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any
  * 不需要手动取消订阅
  */
 inline fun LifecycleOwner.busSticky(key: String, observer: Observer<out Any>) =
-    EventBus[key].observe(this, observer  as Observer<Any>)
+    EventBus[key].observe(this, observer as Observer<Any>)
 
 inline fun Context.busContextSticky(key: String, observer: Observer<out Any>) =
-    EventBus[key].observe2(this, observer  as Observer<Any>)
+    EventBus[key].observe2(this, observer as Observer<Any>)
 
 inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
-    EventBus[this].observe(lifecycleOwner, observer  as Observer<Any>)
+    EventBus[this].observe(lifecycleOwner, observer as Observer<Any>)
 
 /**
  * 永久注册
@@ -67,7 +67,7 @@ inline fun String.unBus(observer: Observer<out Any>) =
 /**
  * 发送事件扩展方法
  */
-inline fun String.busPost(value: Any) =
+inline fun String.busPost(value: Any = Any()) =
     EventBus[this].post(value)
 
 class EventBus private constructor() {
