@@ -23,11 +23,23 @@ import kotlin.jvm.Synchronized
 inline fun LifecycleOwner.bus(key: String, observer: Observer<out Any>) =
     EventBus[key].observeX(this, observer)
 
+inline fun LifecycleOwner.busResume(key: String, observer: Observer<out Any>) =
+    EventBus[key].observeXResume(this, observer)
+
+inline fun LifecycleOwner.busCreate(key: String, observer: Observer<out Any>) =
+    EventBus[key].observeXCreate(this, observer)
+
 inline fun Context.busContext(key: String, observer: Observer<out Any>) =
     EventBus[key].observeX2(this, observer)
 
 inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
     EventBus[this].observeX(lifecycleOwner, observer)
+
+inline fun String.busResume(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
+    EventBus[this].observeXResume(lifecycleOwner, observer)
+
+inline fun String.busCreate(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
+    EventBus[this].observeXCreate(lifecycleOwner, observer)
 
 /**
  * 注册订阅
@@ -37,11 +49,23 @@ inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any
 inline fun LifecycleOwner.busSticky(key: String, observer: Observer<out Any>) =
     EventBus[key].observe(this, observer as Observer<Any>)
 
+inline fun LifecycleOwner.busStickyResume(key: String, observer: Observer<out Any>) =
+    EventBus[key].observeResume(this, observer as Observer<Any>)
+
+inline fun LifecycleOwner.busStickyCreate(key: String, observer: Observer<out Any>) =
+    EventBus[key].observeCreate(this, observer as Observer<Any>)
+
 inline fun Context.busContextSticky(key: String, observer: Observer<out Any>) =
     EventBus[key].observe2(this, observer as Observer<Any>)
 
 inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
     EventBus[this].observe(lifecycleOwner, observer as Observer<Any>)
+
+inline fun String.busStickyResume(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
+    EventBus[this].observeResume(lifecycleOwner, observer as Observer<Any>)
+
+inline fun String.busStickyCreate(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
+    EventBus[this].observeCreate(lifecycleOwner, observer as Observer<Any>)
 
 /**
  * 永久注册

@@ -69,6 +69,21 @@ open class XLiveData<T> : MutableLiveData<T>() {
     }
 
     /**
+     * 只有在OnResumed 之后才接收消息
+     * 默认是onStart
+     */
+    fun observeXResume(owner: LifecycleOwner, observer: Observer<out T>) {
+        observeX(owner.liveDataResumed(), observer)
+    }
+
+    /**
+     *  只要在onCreate之后就能接收消息
+     */
+    fun observeXCreate(owner: LifecycleOwner, observer: Observer<out T>) {
+        observeX(owner.liveDataCreate(), observer)
+    }
+
+    /**
      * 注册订阅
      * 这种注册只会在activity生命周期内执行(获取焦点)，如果发送的时候没有获取焦点，那么会在获取焦点的时候触发
      * X:不会接收之前的消息
@@ -92,6 +107,21 @@ open class XLiveData<T> : MutableLiveData<T>() {
      */
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         super.observe(owner, observer)
+    }
+
+    /**
+     * 只有在OnResumed 之后才接收消息
+     * 默认是onStart
+     */
+    fun observeResume(owner: LifecycleOwner, observer: Observer<in T>) {
+        super.observe(owner.liveDataResumed(), observer)
+    }
+
+    /**
+     *  只要在onCreate之后就能接收消息
+     */
+    fun observeCreate(owner: LifecycleOwner, observer: Observer<in T>) {
+        super.observe(owner.liveDataCreate(), observer)
     }
 
     /**

@@ -46,7 +46,8 @@ internal object BusUtils {
 }
 
 /**
- * 只有在OnResumed才接收消息
+ * 只有在OnResumed 之后才接收消息
+ * 默认是onStart
  */
 fun LifecycleOwner.liveDataResumed(): LifecycleOwner {
     //返回一个代理
@@ -76,6 +77,36 @@ fun LifecycleOwner.liveDataResumed(): LifecycleOwner {
     }
 }
 
+/**
+ * 只要在onCreate之后就能接收消息
+ */
+fun LifecycleOwner.liveDataCreate(): LifecycleOwner {
+    //返回一个代理
+    return LifecycleOwner {
+        object : Lifecycle() {
+            override fun addObserver(observer: LifecycleObserver) {
+                lifecycle.addObserver(observer)
+            }
+
+            override fun removeObserver(observer: LifecycleObserver) {
+                lifecycle.removeObserver(observer)
+            }
+
+            override fun getCurrentState(): State {
+                //如果是create就返回在STARTED，这样LiveData内部就能判断是start
+                return when {
+                    lifecycle.currentState == State.CREATED -> {
+                        State.STARTED
+                    }
+                    else -> {
+                        lifecycle.currentState
+                    }
+                }
+            }
+
+        }
+    }
+}
 
 /**
  * 加入计数,达到次数就回调
