@@ -106,6 +106,8 @@ open class XLiveData<T> : MutableLiveData<T>() {
      * 不需要手动取消订阅
      */
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
+        //这句话防止 Cannot add the same observer with different lifecycles
+        removeObserver(observer as Observer<Any?>)
         super.observe(owner, observer)
     }
 
