@@ -4,10 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Looper
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 
 /**
  * 作者　　: 李坤
@@ -60,12 +57,21 @@ open class XLiveData<T> : MutableLiveData<T>() {
      * 不需要手动取消订阅
      */
     fun observeX(owner: LifecycleOwner, observer: Observer<out T>) {
-        observe(owner, observer as Observer<Any?>)
+        //是否可以回调
+        var isCanCall = false
+        //必须等方法全部执行了，才能被回调，保证hook成功
+        val observerProxy = Observer<T> {
+            if (isCanCall) {
+                (observer as Observer<T>).onChanged(it)
+            }
+        }
+        observe(owner, observerProxy)
         try {
-            BusUtils.hook(this, observer)
+            BusUtils.hook(this, observerProxy)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        isCanCall = true
     }
 
     /**

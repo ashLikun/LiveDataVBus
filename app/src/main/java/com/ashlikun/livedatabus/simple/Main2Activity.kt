@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.ashlikun.livedatabus.busPost
 import com.ashlikun.livedatabus.busSticky
+import kotlinx.coroutines.*
 
 /**
  * 作者　　: 李坤
@@ -32,7 +33,21 @@ class Main2Activity : AppCompatActivity() {
         "key444".busPost("dasdasd")
     }
 
+    override fun onResume() {
+        super.onResume()
+        CoroutineScope(SupervisorJob()).launch {
+            delay(2000)
+            withContext(Dispatchers.Main) {
+                EventBus["keyaaa"].observeX(this@Main2Activity) {
+                    Log.e("Main2Activity", "aaaaaaaaaaaaaa")
+                }
+            }
+        }
+
+    }
+
     fun onClick(view: View?) {
         "key1".busPost()
+        "keyaaa".busPost()
     }
 }
