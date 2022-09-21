@@ -122,14 +122,14 @@ open class XLiveData<T> : MutableLiveData<T>() {
      * 默认是onStart
      */
     fun observeResume(owner: LifecycleOwner, observer: Observer<in T>) {
-        super.observe(owner.liveDataResumed(), observer)
+        observe(owner.liveDataResumed(), observer)
     }
 
     /**
      *  只要在onCreate之后就能接收消息
      */
     fun observeCreate(owner: LifecycleOwner, observer: Observer<in T>) {
-        super.observe(owner.liveDataCreate(), observer)
+        observe(owner.liveDataCreate(), observer)
     }
 
     /**
