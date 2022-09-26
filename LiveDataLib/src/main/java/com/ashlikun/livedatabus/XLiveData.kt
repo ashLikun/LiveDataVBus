@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Looper
 import androidx.lifecycle.*
+import java.lang.ref.WeakReference
 
 /**
  * 作者　　: 李坤
@@ -25,6 +26,7 @@ open class XLiveData<T> : MutableLiveData<T>() {
                 post(value)
             }
         }
+    private val foreverObserver = mutableListOf<WeakReference<Observer<*>>>()
 
     /**
      * 方法功能：从context中获取activity，如果context不是activity那么久返回null
@@ -148,13 +150,29 @@ open class XLiveData<T> : MutableLiveData<T>() {
         }
     }
 
+    fun findObserveForever(observer: Observer<out T>): Observer<*>? {
+        return foreverObserver.find {
+            it.get()?.run {
+                if (this is com.ashlikun.livedatabus.ObserverWrapper) {
+                    return@run this.observer == observer
+                } else {
+                    return@run this == observer
+                }
+            } ?: false
+        }?.get()
+    }
+
     /**
      * 永久注册
      *
      * 需要手动取消订阅
      */
     fun observeForeverX(observer: Observer<out T>) {
-        super.observeForever(ObserverWrapper(observer) as Observer<T>)
+        val obs = ObserverWrapper(observer) as Observer<T>
+        if (findObserveForever(observer) == null) {
+            foreverObserver.add(WeakReference(obs))
+        }
+        super.observeForever(obs)
     }
 
     /**
@@ -172,6 +190,12 @@ open class XLiveData<T> : MutableLiveData<T>() {
      * Forever模式的都要主动取消
      */
     fun unObserve(observer: Observer<out T>) {
-        super.removeObserver(observer as Observer<T>)
+        val old = findObserveForever(observer)
+        if (old != null) {
+            super.removeObserver(old as Observer<T>)
+            foreverObserver.removeAll { it.get() == old }
+        } else {
+            super.removeObserver(observer as Observer<T>)
+        }
     }
 }

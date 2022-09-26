@@ -2,13 +2,11 @@ package com.ashlikun.livedatabus.simple
 
 import android.os.Bundle
 import com.ashlikun.livedatabus.simple.R
-import com.ashlikun.livedatabus.EventBus
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.ashlikun.livedatabus.busPost
-import com.ashlikun.livedatabus.busSticky
+import com.ashlikun.livedatabus.*
 import kotlinx.coroutines.*
 
 /**
@@ -20,6 +18,7 @@ import kotlinx.coroutines.*
  * 功能介绍：
  */
 class Main2Activity : AppCompatActivity() {
+    val busForever1 = Observer<Int> { }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
@@ -31,6 +30,14 @@ class Main2Activity : AppCompatActivity() {
             Log.e("Main2Activity", "接受到Sticky2数据aa$it")
         }
         "key444".busPost("dasdasd")
+
+        "aaa".busForever(busForever1)
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        "aaa".unBus(busForever1)
     }
 
     override fun onResume() {
