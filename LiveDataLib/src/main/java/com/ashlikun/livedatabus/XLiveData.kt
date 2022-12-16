@@ -43,7 +43,7 @@ open class XLiveData<T> : MutableLiveData<T>() {
      * 这里判断线程，如果不是主线程会切换到主线程
      */
     @JvmOverloads
-    fun post(value: T = Any() as T) {
+    fun post(value: T ? = null) {
         if (Looper.getMainLooper() != Looper.myLooper()) {
             super.postValue(value)
         } else {

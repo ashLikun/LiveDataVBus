@@ -67,6 +67,9 @@ inline fun String.busStickyResume(lifecycleOwner: LifecycleOwner, observer: Obse
 inline fun String.busStickyCreate(lifecycleOwner: LifecycleOwner, observer: Observer<out Any>) =
     EventBus[this].observeCreate(lifecycleOwner, observer as Observer<Any>)
 
+inline fun String.busUnObserve(observer: Observer<out Any>) =
+    EventBus[this].unObserve(observer as Observer<Any>)
+
 /**
  * 永久注册
  *
@@ -91,7 +94,7 @@ inline fun String.unBus(observer: Observer<out Any>) =
 /**
  * 发送事件扩展方法
  */
-inline fun String.busPost(value: Any = Any()) =
+inline fun String.busPost(value: Any? = null) =
     EventBus[this].post(value)
 
 class EventBus private constructor() {
