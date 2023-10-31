@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             .observeForeverX { s -> Log.e("MainActivity", "1接受到数据$s") }
 
         bus("key1") {
+            it as String
             Log.e("MainActivity", "3接受到数据bus  $it")
         }
 

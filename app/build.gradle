@@ -35,7 +35,7 @@ dependencies {
     implementation rootProject.ext.designVersion
     implementation "androidx.core:core:1.6.+"
     implementation project(':LiveDataLib')
-    implementation "androidx.constraintlayout:constraintlayout:+"
+    implementation "androidx.constraintlayout:constraintlayout:1+"
     //kotlin 协程
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
 }
