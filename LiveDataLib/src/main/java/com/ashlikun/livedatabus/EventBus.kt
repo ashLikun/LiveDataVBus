@@ -20,25 +20,25 @@ import kotlin.jvm.Synchronized
  *
  * 不需要手动取消订阅
  */
-inline fun LifecycleOwner.bus(key: String, observer: Observer<out Any?>) =
+inline fun LifecycleOwner.bus(key: String, observer: Observer<Any?>) =
     EventBus[key].observeX(this, observer)
 
-inline fun LifecycleOwner.busResume(key: String, observer: Observer<out Any?>) =
+inline fun LifecycleOwner.busResume(key: String, observer: Observer<Any?>) =
     EventBus[key].observeXResume(this, observer)
 
-inline fun LifecycleOwner.busCreate(key: String, observer: Observer<out Any?>) =
+inline fun LifecycleOwner.busCreate(key: String, observer: Observer<Any?>) =
     EventBus[key].observeXCreate(this, observer)
 
-inline fun Context.busContext(key: String, observer: Observer<out Any?>) =
+inline fun Context.busContext(key: String, observer: Observer<Any?>) =
     EventBus[key].observeX2(this, observer)
 
-inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+inline fun String.bus(lifecycleOwner: LifecycleOwner, observer: Observer<Any?>) =
     EventBus[this].observeX(lifecycleOwner, observer)
 
-inline fun String.busResume(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+inline fun String.busResume(lifecycleOwner: LifecycleOwner, observer: Observer<Any?>) =
     EventBus[this].observeXResume(lifecycleOwner, observer)
 
-inline fun String.busCreate(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
+inline fun String.busCreate(lifecycleOwner: LifecycleOwner, observer: Observer<Any?>) =
     EventBus[this].observeXCreate(lifecycleOwner, observer)
 
 /**
@@ -46,29 +46,29 @@ inline fun String.busCreate(lifecycleOwner: LifecycleOwner, observer: Observer<o
  * Sticky:这样订阅者可以接收到订阅之前发送的消息
  * 不需要手动取消订阅
  */
-inline fun LifecycleOwner.busSticky(key: String, observer: Observer<out Any?>) =
-    EventBus[key].observe(this, observer as Observer<Any?>)
+inline fun LifecycleOwner.busSticky(key: String, observer: Observer<Any?>) =
+    EventBus[key].observe(this, observer)
 
-inline fun LifecycleOwner.busStickyResume(key: String, observer: Observer<out Any?>) =
-    EventBus[key].observeResume(this, observer as Observer<Any?>)
+inline fun LifecycleOwner.busStickyResume(key: String, observer: Observer<Any?>) =
+    EventBus[key].observeResume(this, observer)
 
-inline fun LifecycleOwner.busStickyCreate(key: String, observer: Observer<out Any?>) =
-    EventBus[key].observeCreate(this, observer as Observer<Any?>)
+inline fun LifecycleOwner.busStickyCreate(key: String, observer: Observer<Any?>) =
+    EventBus[key].observeCreate(this, observer)
 
-inline fun Context.busContextSticky(key: String, observer: Observer<out Any?>) =
-    EventBus[key].observe2(this, observer as Observer<Any?>)
+inline fun Context.busContextSticky(key: String, observer: Observer<Any?>) =
+    EventBus[key].observe2(this, observer)
 
-inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
-    EventBus[this].observe(lifecycleOwner, observer as Observer<Any?>)
+inline fun String.busSticky(lifecycleOwner: LifecycleOwner, observer: Observer<Any?>) =
+    EventBus[this].observe(lifecycleOwner, observer)
 
-inline fun String.busStickyResume(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
-    EventBus[this].observeResume(lifecycleOwner, observer as Observer<Any?>)
+inline fun String.busStickyResume(lifecycleOwner: LifecycleOwner, observer: Observer<Any?>) =
+    EventBus[this].observeResume(lifecycleOwner, observer)
 
-inline fun String.busStickyCreate(lifecycleOwner: LifecycleOwner, observer: Observer<out Any?>) =
-    EventBus[this].observeCreate(lifecycleOwner, observer as Observer<Any?>)
+inline fun String.busStickyCreate(lifecycleOwner: LifecycleOwner, observer: Observer<Any?>) =
+    EventBus[this].observeCreate(lifecycleOwner, observer)
 
-inline fun String.busUnObserve(observer: Observer<out Any?>) =
-    EventBus[this].unObserve(observer as Observer<Any?>)
+inline fun String.busUnObserve(observer: Observer<Any?>) =
+    EventBus[this].unObserve(observer)
 
 /**
  * 永久注册
@@ -76,19 +76,19 @@ inline fun String.busUnObserve(observer: Observer<out Any?>) =
  * 需要手动取消订阅
  */
 
-inline fun String.busForever(observer: Observer<out Any?>) =
+inline fun String.busForever(observer: Observer<Any?>) =
     EventBus[this].observeForeverX(observer)
 
-inline fun String.busStickyForever(observer: Observer<out Any?>) =
-    EventBus[this].observeForever(observer as Observer<Any?>)
+inline fun String.busStickyForever(observer: Observer<Any?>) =
+    EventBus[this].observeForever(observer)
 
 /**
  * 反注册
  */
-inline fun Observer<out Any?>.unBus(key: String) =
+inline fun Observer<Any?>.unBus(key: String) =
     EventBus[key].unObserve(this)
 
-inline fun String.unBus(observer: Observer<out Any?>) =
+inline fun String.unBus(observer: Observer<Any?>) =
     EventBus[this].unObserve(observer)
 
 /**

@@ -11,6 +11,9 @@ import androidx.lifecycle.Observer
 import com.ashlikun.livedatabus.*
 
 class MainActivity : AppCompatActivity() {
+    private var obs = Observer<Any?> {
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,13 +28,13 @@ class MainActivity : AppCompatActivity() {
 
         EventBus["key1"]
             .observeForeverX { s -> Log.e("MainActivity", "1接受到数据$s") }
-
+        "ddd".busForever(obs)
         bus("key1") {
             it as String
             Log.e("MainActivity", "3接受到数据bus  $it")
         }
 
-        "key444".bus(this.liveDataResumed(), Observer<Any> {
+        "key444".bus(this.liveDataResumed(), Observer<Any?> {
             Log.e("MainActivity", "key444接受到数据bus  $it  ${lifecycle.currentState}")
         }.count(3))
     }
